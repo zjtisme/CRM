@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+
+
+    Customer Information Review
+    <div id="content">
+        <h3>Customer Information</h3>
+        {{ customer_form.as_table }}
+
+        <hr>
+        <h3>Enrollment Information</h3>
+            {{ enroll_form.as_table }}
+
+        <hr>
+
+
+
+
+        <a href="{% url 'enrollment_rejection' enroll_obj.id %}" class="btn btn-danger"> Withdraw </a>
+        <a href="{% url 'payment' enroll_obj.id %}" class="btn btn-success pull-right" >Next Step</a>
+        <div class="row">
+            <div>
+                <ul>
+                    {% for k,v in msgs.items %}
+                    <li>{{k}} : {{v}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block bottom-js %}
+
+{% endblock %}

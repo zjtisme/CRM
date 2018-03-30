@@ -1,0 +1,14 @@
+CRM consideration and components:
+
+Consideration:
+	1. User Type
+	2. User Amount (Django is mainly used for administration system, Ternado is mainly used for high concurrency system like Blog)
+	3. Business Scene
+
+Components:
+	1. Django
+	2. Bootstrap
+	3. JQuery
+
+Database Design:
+	

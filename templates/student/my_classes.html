@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+{% load stu_tags %}
+{% block page-content %}
+
+
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">My Classes</div>
+  <div class="panel-body">
+      <table class="table table-striped table-responsive">
+          <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Class</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Course Procedure(Taken Times)</th>
+                <th>My Scores</th>
+                <th>Homework Management</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for enroll_obj in request.user.stu_account.enrollment_set.all %}
+                <tr>
+                    <td>{{enroll_obj.enrolled_class.course}}</td>
+                    <td>{{enroll_obj.enrolled_class}}</td>
+                    <td>{{enroll_obj.enrolled_class.start_date}}</td>
+                    <td>{{enroll_obj.enrolled_class.end_date}}</td>
+                    <td>{{enroll_obj.enrolled_class.courserecord_set.all.count}}</td>
+                    <td>{% get_score enroll_obj request.user.stu_account as score_data%}
+                        {{score_data.score__sum}}
+                    </td>
+                    <td><a href="{% url 'studyrecords' enroll_obj.id %}">Homework Management</a> </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+</div>
+
+{% endblock %}

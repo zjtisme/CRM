@@ -1,0 +1,63 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+
+
+
+    <div id="content">
+        <h3>Customer Payment Record</h3>
+        <form class="form-horizontal" method="post" role="form"> {% csrf_token %}
+            <ul style="color:red">
+                {% for error in errors %}
+                <li>{{error}}</li>
+                {% endfor %}
+            </ul>
+
+            <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        Customer
+                    </label>
+                    <div class="col-sm-6">
+                        {{enroll_obj.customer}}
+                    </div>
+                </div>
+
+             <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        Enrolled Class
+                    </label>
+                    <div class="col-sm-6">
+                        {{enroll_obj.enrolled_class}}
+                    </div>
+                </div>
+
+             <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        Paid Amount
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="text" name="amount" placeholder="500 at least">
+                    </div>
+                </div>
+
+             <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        Consultant
+                    </label>
+                    <div class="col-sm-6">
+                        {{enroll_obj.customer.consultant}}
+                    </div>
+                </div>
+
+            <input type="submit" class="btn btn-info pull-right" value="Submit">
+        </form>
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block bottom-js %}
+
+{% endblock %}

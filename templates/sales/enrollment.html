@@ -1,0 +1,47 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+
+
+    Customer Enrollment Table
+    <div id="content">
+        <form class="form-horizontal" method="post" role="form"> {% csrf_token %}
+            <span style="color:red">{{enroll_form.errors}}</span>
+            <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        Customer
+                    </label>
+                    <div class="col-sm-6">
+                        qq: {{customer_obj.qq}} name: {{customer_obj.name}}
+                    </div>
+            </div>
+        {% for field in enroll_form %}
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" style="font-weight: normal">
+                        {{field.label}}
+                    </label>
+                    <div class="col-sm-6">
+                        {{field}}
+                    </div>
+                </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-info pull-right" value="Next Step">
+        </form>
+        <div class="row">
+            <div>
+                <ul>
+                    {% for k,v in msgs.items %}
+                    <li>{{k}} : {{v}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+{% block bottom-js %}
+
+{% endblock %}

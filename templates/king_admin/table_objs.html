@@ -1,0 +1,136 @@
+{% extends 'king_admin/table_index.html' %}
+{% load tags %}
+
+
+
+    {% block container %}
+        <div class="panel panel-info">
+             <div class="panel-heading">
+                 <h3 class="panel-title">{% get_model_name admin_class %}
+                     <a href="{{request.path}}add/" class="pull-right">Add</a></h3>
+
+             </div>
+            <div class="panel-body">
+                <div class="row">
+                    <form class="" method="get">
+                        {% for condition in admin_class.list_filters %}
+
+                    <div class="col-sm-4">
+                        <span>{{condition}}</span>
+                        {% render_filter_ele condition admin_class filter_condition %}
+                    </div>
+
+                        {% endfor %}
+
+                         <button type="submit" class="btn btn-success">Filter</button>
+
+
+                        <div class="row" style="margin-top:35px; margin-left:10px">
+
+                            <div class="col-sm-3">
+                                <input type="search" class="form-control" name="_q" value="{{search_text}}" placeholder="search by {% for search_field in admin_class.search_fields %} {{search_field}} {% endfor %}">
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-success">search</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row" style="margin-left: 10px; margin-top: 10px">
+                        <form onsubmit="return ActionSubmit(this)" method="POST"> {% csrf_token %}
+                        <div class="col-sm-3">
+                                <select id='action_list' name='action' class="form-control">
+                                    <option value="">----------</option>
+                                    {% for action in admin_class.actions %}
+                                    <option value="{{action}}">{{action}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn">GO</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                `
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 35px"><input type="checkbox" onclick="CheckAllToggle(this)"></th>
+                            {% for column in admin_class.list_display %}
+                                {% build_table_header_column column orderby_key filter_condition admin_class %}
+
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr><td></td><td>{{query_sets.paginator.count}} items in total</td></tr>
+                    </tfoot>
+                    <tbody>
+                        {% for obj in query_sets %}
+                        <tr>
+                            <td><input tag="obj_checkbox" type="checkbox" value="{{obj.id}}"></td>
+                            {% build_table_row request obj admin_class %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+
+                <nav>
+              <ul class="pagination">
+                  {% if query_sets.has_previous %}
+                        <li class=""><a href="?page={{ query_sets.previous_page_number }}&o={{previous_orderby}}&_q={{search_context}}">Previous</a></li>
+                  {% endif %}
+
+                  {#{% for loop_counter in query_sets.paginator.page_range %}#}
+                  {#      {% render_page_ele  loop_counter query_sets filter_condition %}#}
+                  {#{% endfor %}#}
+
+                  {% build_paginators query_sets filter_condition previous_orderby search_text %}
+
+                  {% if query_sets.has_next %}
+                        <li class=""><a href="?page={{ query_sets.next_page_number }}&o={{previous_orderby}}&_q={{search_context}}">Next</a></li>
+                  {% endif %}
+
+
+{#                <li class="disabled"><a href="#">&laquo;</a></li>#}
+{#                <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>#}
+              </ul>
+          </nav>
+            </div>
+        </div>
+
+        <script>
+            function CheckAllToggle(ele) {
+                if($(ele).prop("checked")) {
+                    $("input[tag='obj_checkbox']").prop("checked", true);
+                } else {
+                    $("input[tag='obj_checkbox']").prop("checked", false);
+                }
+            }
+
+            function ActionSubmit(form_ele) {
+                var selected_ids = [];
+                $("input[tag='obj_checkbox']:checked").each(function(){
+                    selected_ids.push($(this).val());
+                })
+                var selected_action = $('#action_list').val();
+                if(selected_ids.length == 0) {
+                    alert('No object got selected!');
+                    return false;
+                }
+                if(!selected_action) {
+                    alert('No action got selected!');
+                    return false;
+                }
+
+                var selected_ids_ele = "<input name='selected_ids' type='hidden' value='" + selected_ids.toString() + "'>";
+                $(form_ele).append(selected_ids_ele);
+
+                return true;
+            }
+        </script>
+    {% endblock %}
+
+

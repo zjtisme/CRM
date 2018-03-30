@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% block page-content %}
+Customer Pool
+
+
+    <div id="content"></div>
+
+
+
+{% endblock %}
+
+{% block bottom-js %}
+    <script>
+    $(document.read(function() {
+        $("#content").load("/king_admin/crm/customer/");
+    })
+    </script>
+{% endblock %}

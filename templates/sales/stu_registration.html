@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load crm_tags %}
+
+{% block body %}
+
+    <div class="container col-lg-8 col-md-offset-2">
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Oldboy Education | Enrollment Registration</h3>
+            </div>
+            <div class="panel-body">
+                {% if status != 1 %}
+                <form class="form-horizontal" method="post" role="form" onsubmit="return RegisterFormCheck()"> {% csrf_token %}
+                    <span style="color:red">{{customer_form.errors}}</span>
+                    {% for field in customer_form %}
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label" style="font-weight: normal">
+                                {{field.label}}
+                            </label>
+                            <div class="col-sm-6">
+                                {{field}}
+                            </div>
+                    </div>
+                    {% endfor %}
+                    <hr/>
+
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label" style="font-weight: normal">
+                                Registered Class
+                            </label>
+                            <div class="col-sm-6">
+                                {{ enroll_obj.enrolled_class }}
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+                            <label class="col-sm-2 control-label" style="font-weight: normal">
+                                Tuition
+                            </label>
+                            <div class="col-sm-6">
+                                {{ enroll_obj.enrolled_class.course.price }}
+                            </div>
+                    </div>
+
+                     <div class="form-group">
+                            <label class="col-sm-2 control-label" style="font-weight: normal">
+                                Start Date
+                            </label>
+                            <div class="col-sm-6">
+                                {{ enroll_obj.enrolled_class.start_date }}
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <pre style="height: 450px; overflow: auto">{% render_enroll_contract enroll_obj %}</pre>
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <input type="checkbox" name="contract_agreed" id="check_test"> I've read this agreement and agreed on it.
+                            </div>
+                    </div>
+
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-success" value="OK">
+                    </div>
+
+                </form>
+                {% else %}
+                    <h2>Thanks, your form has already been submitted, and we'll respond you very soon!</h2>
+                {% endif %}
+            </div>
+            <hr>
+            {% if status != 1 %}
+            <p>Please upload the pictures for your id card. (Both sides)</p>
+            <form id="filedropzone" method="post" action="{{request.path}}" class="dropzone dz-clickable">{% csrf_token %}
+                <div class="dz-default dz-message">
+                    <div class="dz-icon icon-wrap icon-circle icon-wrap-md">
+                        <i class="fa fa-cloud-upload fa-3x"></i>
+                    </div>
+                    <div>
+                        <p class="dz-text">Drag pictures here</p>
+                        <p class="text-muted">2 pictures minimum</p>
+                    </div>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom-js %}
+<script>
+    $(document).ready(function() {
+        Dropzone.options.filedropzone = {
+        url: "{{request.path}}",
+        paramName: "file",
+        maxFilesize: 1,
+        addRemoveLinks: true,
+        maxFiles: 5,
+        uploadMultiple: true,
+        accept: function(file, done) {
+            if(file.name == "justinbieber.jpg") {
+                done("Naha, you don't.");
+            } else {
+                done();
+            }
+        }
+    };
+
+    Dropzone.autoDiscover = false;
+    myDropzone = new Dropzone("#filedropzone");
+    myDropzone.on("addedfile", function(file) {
+        console.log("--------");
+    });
+
+    })
+
+
+    function RegisterFormCheck() {
+        if (myDropzone.files.length < 2) {
+            alert("Please upload at least 2 pictures!");
+            return false;
+        }
+        if ($("#check_test").prop("checked")) {
+            $("form").find("[disabled]").removeAttr("disabled");
+            return true;
+        }
+        else {
+            alert("Must agree on the agreement before moving on");
+            return false;
+        }
+    }
+
+
+
+</script>
+
+{% endblock %}
